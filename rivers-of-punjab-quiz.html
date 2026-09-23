@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rivers of Punjab Quiz | House of Aspirants</title>
+<style>
+:root{
+  --bg:#eef3f8; --card:#ffffff; --text:#16232e; --muted:#5c7185;
+  --river:#0e7c9e; --river2:#12b3b0; --ghat:#e8622c; --gold:#e0a527;
+  --ok:#1a9e5c; --bad:#d6483b; --line:#d9e4ec; --shadow:0 10px 30px rgba(16,50,70,.10);
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#0b141c; --card:#101c26; --text:#e7f0f5; --muted:#8fa4b3;
+  --line:#1e2f3c; --shadow:0 10px 30px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--text);
+  transition:background .3s,color .3s;padding-top:env(safe-area-inset-top,0);padding-bottom:env(safe-area-inset-bottom,0)}
+.wrap{max-width:640px;margin:0 auto;padding:16px 16px 40px}
+header.top{position:sticky;top:0;z-index:5;background:linear-gradient(120deg,var(--river),var(--river2));
+  color:#fff;padding:14px 18px;border-radius:0 0 22px 22px;box-shadow:var(--shadow);
+  display:flex;align-items:center;justify-content:space-between}
+header.top .brand{display:flex;flex-direction:column}
+header.top .brand b{font-size:17px;letter-spacing:.2px}
+header.top .brand span{font-size:11px;opacity:.85}
+.toggle{background:rgba(255,255,255,.2);border:none;color:#fff;width:38px;height:38px;border-radius:50%;
+  cursor:pointer;font-size:17px;transition:transform .2s}
+.toggle:active{transform:scale(.9)}
+.card{background:var(--card);border-radius:20px;box-shadow:var(--shadow);padding:22px;margin-top:18px;
+  border:1px solid var(--line);animation:rise .4s ease}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+h1.hero{font-size:26px;margin:6px 0 4px;line-height:1.25}
+p.sub{color:var(--muted);margin:0 0 14px;font-size:14.5px}
+.stat-row{display:flex;gap:10px;margin:14px 0;flex-wrap:wrap}
+.pill{background:linear-gradient(120deg,#0e7c9e12,#12b3b012);border:1px solid var(--line);border-radius:12px;
+  padding:10px 14px;flex:1;min-width:110px;text-align:center}
+.pill b{display:block;font-size:18px;color:var(--river)}
+.pill span{font-size:11.5px;color:var(--muted)}
+.btn{border:none;border-radius:14px;padding:14px 20px;font-size:15.5px;font-weight:600;cursor:pointer;
+  width:100%;position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:linear-gradient(120deg,var(--river),var(--river2));color:#fff;box-shadow:0 8px 20px rgba(14,124,158,.35)}
+.btn-ghost{background:transparent;color:var(--river);border:1.5px solid var(--river)}
+.btn-row{display:flex;gap:10px;margin-top:10px}
+.btn-row .btn{width:auto;flex:1}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.55);transform:scale(0);animation:rip .5s linear}
+@keyframes rip{to{transform:scale(3);opacity:0}}
+.progress-wrap{margin:14px 0 6px}
+.progress-track{background:var(--line);height:9px;border-radius:6px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--river),var(--river2));border-radius:6px;
+  transition:width .4s ease}
+.meta-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);margin-top:6px}
+.timer{font-weight:700;color:var(--ghat);font-variant-numeric:tabular-nums}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.3px}
+.badge-easy{background:#1a9e5c1f;color:var(--ok)}
+.badge-medium{background:#e0a5271f;color:var(--gold)}
+.badge-hard{background:#d6483b1f;color:var(--bad)}
+.qtext{font-size:18.5px;font-weight:600;margin:14px 0 16px;line-height:1.4}
+.opt{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:14px;padding:13px 14px;
+  margin-bottom:10px;cursor:pointer;font-size:15px;transition:.15s;background:var(--bg)}
+.opt:hover{border-color:var(--river)}
+.opt .k{width:26px;height:26px;border-radius:50%;background:var(--line);display:flex;align-items:center;
+  justify-content:center;font-size:12.5px;font-weight:700;flex:none}
+.opt.correct{border-color:var(--ok);background:#1a9e5c14}
+.opt.correct .k{background:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--bad);background:#d6483b14}
+.opt.wrong .k{background:var(--bad);color:#fff}
+.opt.disabled{pointer-events:none;opacity:.85}
+.explain{background:var(--bg);border-left:4px solid var(--river);border-radius:10px;padding:12px 14px;
+  margin-top:8px;font-size:14px;line-height:1.55;display:none}
+.explain.show{display:block;animation:rise .3s ease}
+.explain b{color:var(--river)}
+.chip-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chip{font-size:11.5px;background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:4px 10px;color:var(--muted)}
+.icon-btn{background:var(--bg);border:1.5px solid var(--line);border-radius:12px;width:42px;height:42px;
+  font-size:17px;cursor:pointer;flex:none;transition:.15s}
+.icon-btn.active{background:var(--gold);border-color:var(--gold);color:#fff}
+.foot-nav{display:flex;gap:8px;margin-top:16px;align-items:center}
+.score-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.result-badge{text-align:center;font-size:52px;margin:6px 0}
+.result-title{text-align:center;font-size:22px;font-weight:700;margin:2px 0}
+.result-msg{text-align:center;color:var(--muted);font-size:14.5px;margin-bottom:8px}
+footer.site{text-align:center;margin-top:28px;color:var(--muted);font-size:13px;line-height:1.8}
+footer.site a{color:var(--river);text-decoration:none;font-weight:600}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}
+.confetti span{position:absolute;top:-20px;width:8px;height:14px;opacity:.9;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg);opacity:0}}
+.hidden{display:none!important}
+.rev-item{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;font-size:14px}
+.rev-item .tag{font-size:11px;font-weight:700;color:var(--bad)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><b>🌊 House of Aspirants</b><span>Learn • Practice • Succeed</span></div>
+    <button class="toggle" id="themeBtn" onclick="toggleTheme()">🌙</button>
+  </header>
+
+  <!-- WELCOME -->
+  <div class="card" id="welcomeScreen">
+    <span class="badge badge-medium">Competitive Exam Prep</span>
+    <h1 class="hero">Rivers of Punjab</h1>
+    <p class="sub">10 handpicked MCQs on origins, dams, ancient names and key facts — with explanations and memory tricks to lock it in.</p>
+    <div class="stat-row">
+      <div class="pill"><b>10</b><span>Questions</span></div>
+      <div class="pill"><b>5:00</b><span>Time Limit</span></div>
+      <div class="pill"><b>MCQ</b><span>Format</span></div>
+    </div>
+    <button class="btn btn-primary" onclick="rippleFx(event);startQuiz()">Start Quiz →</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="card hidden" id="quizScreen">
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+      <div class="meta-row">
+        <span id="qCounter">Question 1 / 10</span>
+        <span>Score: <b id="liveScore">0</b> &nbsp;|&nbsp; <span class="timer" id="timerText">05:00</span>
+        <button class="icon-btn" style="width:30px;height:30px;font-size:13px;margin-left:6px" id="pauseBtn" onclick="togglePause()">⏸</button></span>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+      <span class="badge" id="diffBadge"></span>
+      <button class="icon-btn" id="bookmarkBtn" onclick="toggleBookmark()" title="Bookmark">🔖</button>
+    </div>
+    <div class="qtext" id="qText"></div>
+    <div id="optsWrap"></div>
+    <div class="explain" id="explainBox"></div>
+    <div class="chip-row" id="chipRow"></div>
+    <div class="foot-nav">
+      <button class="btn btn-ghost" id="prevBtn" onclick="prevQuestion()">← Previous</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>Next →</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="card hidden" id="resultScreen">
+    <div class="result-badge" id="resultEmoji">🏆</div>
+    <div class="result-title" id="resultTitle">Champion!</div>
+    <div class="result-msg" id="resultMsg"></div>
+    <div class="score-grid">
+      <div class="pill"><b id="rCorrect">0</b><span>Correct</span></div>
+      <div class="pill"><b id="rWrong">0</b><span>Wrong</span></div>
+      <div class="pill"><b id="rAcc">0%</b><span>Accuracy</span></div>
+      <div class="pill"><b id="rTime">0:00</b><span>Time Taken</span></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="reviewIncorrect()">Review Mistakes</button>
+      <button class="btn btn-ghost" onclick="restartQuiz()">Restart</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="window.print()">🖨 Print</button>
+      <button class="btn btn-ghost" onclick="shareResult()">📤 Share</button>
+    </div>
+  </div>
+
+  <!-- REVIEW -->
+  <div class="card hidden" id="reviewScreen">
+    <h1 class="hero" style="font-size:20px">Review Incorrect Answers</h1>
+    <div id="reviewList"></div>
+    <button class="btn btn-primary" onclick="backToResult()">← Back to Result</button>
+  </div>
+
+  <footer class="site">
+    📚 <b>House of Aspirants</b><br>Free Learning Platform<br>
+    Created by Gurpreet Singh, Sub Inspector, Punjab Police<br>
+    <a href="https://t.me/HouseofAspirants" target="_blank">t.me/HouseofAspirants</a>
+  </footer>
+</div>
+
+<script>
+const QUESTIONS = [
+{q:"During the Rigveda period, Punjab was known as the:",opts:["Land of Five Rivers","Land of Seven Rivers","Pentopotamia","Aryavarta"],a:1,
+ diff:"Easy",prob:"High",pyq:"Asked frequently in Punjab-based exams",trick:"Rig = Rigveda = 7 (Sapta Sindhu era, more rivers incl. Saraswati)",
+ exp:"In the Rigveda period Punjab was called the <b>Land of Seven Rivers</b> (Indus, Sutlej, Beas, Ravi, Chenab, Jhelum, Saraswati), reflecting an older geography that still included the Saraswati."},
+{q:"The 'Land of Seven Rivers' included all of the following EXCEPT:",opts:["Indus","Saraswati","Yamuna","Chenab"],a:2,
+ diff:"Medium",prob:"High",pyq:"Common elimination-type question",trick:"Yamuna belongs to the Gangetic system, not Punjab's rivers",
+ exp:"The Seven Rivers were Indus, Sutlej, Beas, Ravi, Chenab, Jhelum and Saraswati. <b>Yamuna</b> was never part of this group — it flows through the Gangetic plains, not Punjab."},
+{q:"The word 'Punjab' is derived from which language, and what does it mean?",opts:["Sanskrit — Holy Land","Persian — Five Waters","Greek — Land of Rivers","Urdu — Fertile Land"],a:1,
+ diff:"Easy",prob:"High",pyq:"One of the most repeated etymology questions",trick:"Punj (5) + Aab (Water) = Punjab, both Persian words",
+ exp:"'Punjab' comes from <b>Persian</b>: <i>Punj</i> (Five) + <i>Aab</i> (Water) = 'Land of Five Waters', referring to the five rivers of the Mahabharata-era Punjab."},
+{q:"What was the Greek name for the Punjab region?",opts:["Sapta Sindhu","Panchanad","Pentopotamia","Aryadesh"],a:2,
+ diff:"Medium",prob:"Medium",pyq:"Occasionally asked alongside Persian etymology",trick:"Penta = Five (Greek) + Potamia = Rivers, mirrors 'Punjab'",
+ exp:"The Greeks called Punjab <b>Pentopotamia</b>, meaning 'Land of Five Rivers' — the Greek equivalent of the Persian-derived name Punjab."},
+{q:"Which river is the longest flowing in Punjab, and where does it originate?",opts:["Beas — Beas Kund","Ravi — Rohtang Pass","Sutlej — Rakas Lake near Mansarovar","Ghaggar — Solan District"],a:2,
+ diff:"Medium",prob:"High",pyq:"Very frequently tested combination fact",trick:"Sutlej = 'Sabse Lamba' (longest) — starts near Mansarovar, ends longest",
+ exp:"The <b>Sutlej</b> is the longest river flowing through Punjab. It originates from <b>Rakas Lake near Mansarovar</b> in Tibet and enters Punjab near Ropar."},
+{q:"On which river is the Bhakra Nangal Dam built, and where does the river enter Punjab?",opts:["Ravi — Pathankot","Sutlej — Ropar","Beas — Hoshiarpur","Ghaggar — Patiala"],a:1,
+ diff:"Medium",prob:"High",pyq:"Dam-river pairing is a classic exam favourite",trick:"Bhakra Nangal = Big dam = Big (longest) river = Sutlej",
+ exp:"The <b>Bhakra Nangal Dam</b> is built on the <b>Sutlej</b> river, which enters Punjab near <b>Ropar</b>. Its Sanskrit name is Shatadru and Vedic name Satlutri."},
+{q:"The Beas river originates from Beas Kund near which pass, and which dam is built on it?",opts:["Rohtang Pass — Pong Dam","Zoji La — Ranjit Sagar Dam","Shipki La — Bhakra Dam","Nathula — Ranjit Sagar Dam"],a:0,
+ diff:"Medium",prob:"Medium",pyq:"Frequently paired with confluence question",trick:"Beas joins Sutlej at Harike — remember 'B' before 'S' in the alphabet, Beas joins into Sutlej",
+ exp:"The <b>Beas</b> originates at Beas Kund near <b>Rohtang Pass</b> in the Kullu Hills. The <b>Pong Dam</b> is built on it, and it enters Punjab at Hoshiarpur before joining the Sutlej at Harike."},
+{q:"Which river is the SHORTEST flowing in Punjab, and on which river is the Ranjit Sagar Dam built?",opts:["Ghaggar — Ghaggar itself","Ravi — Ravi itself","Beas — Sutlej","Sutlej — Beas"],a:1,
+ diff:"Medium",prob:"High",pyq:"Very commonly asked shortest-river fact",trick:"Ravi = shortest name feel + shortest river; enters at Pathankot",
+ exp:"The <b>Ravi</b> is the shortest river flowing in Punjab. It originates from Rohtang Pass in the Kullu Hills, enters Punjab at Pathankot, and the <b>Ranjit Sagar Dam</b> is built on it."},
+{q:"The Ghaggar river is best described as a:",opts:["Perennial, glacier-fed river","Seasonal river that flows mainly in the rainy season","Underground spring-fed river","Snow-fed river from Rohtang Pass"],a:1,
+ diff:"Hard",prob:"Medium",pyq:"Tests understanding of perennial vs seasonal rivers",trick:"Ghaggar = 'Ghayab' (disappears) in dry months — seasonal, monsoon-dependent",
+ exp:"Unlike the glacier-fed Himalayan rivers, the <b>Ghaggar</b> is a <b>seasonal river</b> that flows mainly during the rainy season, originating in the Solan District and entering Punjab near Patiala. It is believed to be a remnant of the ancient Saraswati river."},
+{q:"'Trimab' and 'Panjnad' refer to which river confluences?",opts:["Trimab: Beas+Sutlej meeting; Panjnad: all five rivers meeting","Trimab: Ravi+Chenab+Jhelum meeting; Panjnad: where Trimab meets Sutlej","Trimab: Sutlej origin; Panjnad: Beas origin","Trimab: Ghaggar+Saraswati meeting; Panjnad: Ravi meeting Chenab"],a:1,
+ diff:"Hard",prob:"Medium",pyq:"Advanced confluence question, less common but high-value",trick:"Tri = 3 rivers (Ravi+Chenab+Jhelum) meet at Trimab; Panj = 5, so Panjnad = Trimab + Sutlej",
+ exp:"<b>Trimab</b> is the meeting point of the <b>Ravi, Chenab and Jhelum</b>. <b>Panjnad</b> is the point where the Trimab further meets the <b>Sutlej</b> — effectively bringing together the five historic rivers before they join the Indus."}
+];
+
+let order=[], idx=0, score=0, answers=[], bookmarks=new Set(), timerId=null, secondsLeft=300, paused=false, startTs=0, totalTimeUsed=0;
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function toggleTheme(){
+  const html=document.documentElement;
+  const dark = html.getAttribute('data-theme')==='dark';
+  html.setAttribute('data-theme', dark?'light':'dark');
+  document.getElementById('themeBtn').textContent = dark?'🌙':'☀️';
+}
+
+function rippleFx(e){
+  const btn=e.currentTarget, r=document.createElement('span');
+  r.className='ripple';
+  const rect=btn.getBoundingClientRect();
+  r.style.left=(e.clientX-rect.left)+'px'; r.style.top=(e.clientY-rect.top)+'px';
+  btn.appendChild(r); setTimeout(()=>r.remove(),500);
+}
+
+function startQuiz(){
+  order = shuffle([...Array(QUESTIONS.length).keys()]);
+  idx=0; score=0; answers=new Array(QUESTIONS.length).fill(null);
+  secondsLeft=300; paused=false; startTs=Date.now();
+  document.getElementById('welcomeScreen').classList.add('hidden');
+  document.getElementById('quizScreen').classList.remove('hidden');
+  document.getElementById('resultScreen').classList.add('hidden');
+  startTimer();
+  renderQuestion();
+}
+
+function startTimer(){
+  clearInterval(timerId);
+  timerId=setInterval(()=>{
+    if(paused) return;
+    secondsLeft--;
+    updateTimerText();
+    if(secondsLeft<=0){clearInterval(timerId); finishQuiz();}
+  },1000);
+  updateTimerText();
+}
+function updateTimerText(){
+  const m=Math.floor(secondsLeft/60), s=secondsLeft%60;
+  document.getElementById('timerText').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+function togglePause(){
+  paused=!paused;
+  document.getElementById('pauseBtn').textContent = paused?'▶':'⏸';
+}
+
+function currentQ(){ return QUESTIONS[order[idx]]; }
+
+function renderQuestion(){
+  const q=currentQ(), rec=answers[idx];
+  document.getElementById('progFill').style.width = ((idx)/QUESTIONS.length*100)+'%';
+  document.getElementById('qCounter').textContent = `Question ${idx+1} / ${QUESTIONS.length}`;
+  document.getElementById('liveScore').textContent = score;
+  document.getElementById('diffBadge').className = 'badge badge-'+q.diff.toLowerCase();
+  document.getElementById('diffBadge').textContent = q.diff+' • '+q.prob+' Exam Chance';
+  document.getElementById('qText').textContent = q.q;
+  document.getElementById('bookmarkBtn').className = 'icon-btn'+(bookmarks.has(idx)?' active':'');
+
+  let optOrder = rec ? rec.optOrder : shuffle([...Array(q.opts.length).keys()]);
+  if(!rec) answers[idx] = {optOrder, chosen:null, correct:false};
+
+  const wrap=document.getElementById('optsWrap'); wrap.innerHTML='';
+  const letters=['A','B','C','D'];
+  optOrder.forEach((origIdx, pos)=>{
+    const div=document.createElement('div');
+    div.className='opt';
+    div.innerHTML = `<span class="k">${letters[pos]}</span><span>${q.opts[origIdx]}</span>`;
+    div.onclick=()=>selectOption(pos, optOrder, origIdx);
+    wrap.appendChild(div);
+  });
+
+  const explainBox=document.getElementById('explainBox');
+  const chipRow=document.getElementById('chipRow');
+  chipRow.innerHTML = q.pyq?`<span class="chip">📌 ${q.pyq}</span>`:'';
+  if(q.trick) chipRow.innerHTML += `<span class="chip">💡 ${q.trick}</span>`;
+
+  if(answers[idx].chosen!==null){
+    revealAnswer(answers[idx].chosen);
+    explainBox.innerHTML = `<b>Explanation:</b> ${q.exp}`;
+    explainBox.classList.add('show');
+    document.getElementById('nextBtn').disabled=false;
+  } else {
+    explainBox.classList.remove('show'); explainBox.innerHTML='';
+    document.getElementById('nextBtn').disabled=true;
+  }
+  document.getElementById('prevBtn').style.visibility = idx===0?'hidden':'visible';
+  document.getElementById('nextBtn').textContent = idx===QUESTIONS.length-1?'Finish →':'Next →';
+}
+
+function selectOption(pos, optOrder, origIdx){
+  if(answers[idx].chosen!==null) return;
+  const q=currentQ();
+  const isCorrect = origIdx===q.a;
+  answers[idx].chosen=pos; answers[idx].correct=isCorrect;
+  if(isCorrect) score++;
+  document.getElementById('liveScore').textContent=score;
+  revealAnswer(pos);
+  const explainBox=document.getElementById('explainBox');
+  explainBox.innerHTML = `<b>Explanation:</b> ${q.exp}`;
+  explainBox.classList.add('show');
+  document.getElementById('nextBtn').disabled=false;
+}
+
+function revealAnswer(chosenPos){
+  const q=currentQ(), rec=answers[idx];
+  const opts=document.querySelectorAll('#optsWrap .opt');
+  opts.forEach((el,pos)=>{
+    el.classList.add('disabled');
+    const origIdx = rec.optOrder[pos];
+    if(origIdx===q.a) el.classList.add('correct');
+    else if(pos===chosenPos) el.classList.add('wrong');
+  });
+}
+
+function toggleBookmark(){
+  if(bookmarks.has(idx)) bookmarks.delete(idx); else bookmarks.add(idx);
+  document.getElementById('bookmarkBtn').classList.toggle('active');
+}
+
+function nextQuestion(){
+  if(idx<QUESTIONS.length-1){ idx++; renderQuestion(); }
+  else { finishQuiz(); }
+}
+function prevQuestion(){ if(idx>0){ idx--; renderQuestion(); } }
+
+function finishQuiz(){
+  clearInterval(timerId);
+  totalTimeUsed = Math.round((Date.now()-startTs)/1000);
+  document.getElementById('quizScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.remove('hidden');
+  const correct=score, wrong=QUESTIONS.length-score, acc=Math.round(correct/QUESTIONS.length*100);
+  document.getElementById('rCorrect').textContent=correct;
+  document.getElementById('rWrong').textContent=wrong;
+  document.getElementById('rAcc').textContent=acc+'%';
+  const m=Math.floor(totalTimeUsed/60), s=totalTimeUsed%60;
+  document.getElementById('rTime').textContent=`${m}:${String(s).padStart(2,'0')}`;
+
+  let emoji='🥉', title='Bronze', msg='Good start — revise the tricky ones and try again!';
+  if(acc>=90){emoji='🏆';title='Champion!';msg='Outstanding! You truly know the Rivers of Punjab.';}
+  else if(acc>=75){emoji='🥇';title='Gold';msg='Excellent work! Just a little more polish for perfection.';}
+  else if(acc>=50){emoji='🥈';title='Silver';msg='Solid effort! Review the explanations to level up.';}
+  document.getElementById('resultEmoji').textContent=emoji;
+  document.getElementById('resultTitle').textContent=title;
+  document.getElementById('resultMsg').textContent=msg;
+  if(acc>90) launchConfetti();
+}
+
+function launchConfetti(){
+  const c=document.createElement('div'); c.className='confetti'; document.body.appendChild(c);
+  const colors=['#0e7c9e','#12b3b0','#e0a527','#e8622c','#1a9e5c'];
+  for(let i=0;i<60;i++){
+    const s=document.createElement('span');
+    s.style.left=Math.random()*100+'vw';
+    s.style.background=colors[i%colors.length];
+    s.style.animationDuration=(2+Math.random()*2)+'s';
+    s.style.animationDelay=(Math.random()*0.5)+'s';
+    c.appendChild(s);
+  }
+  setTimeout(()=>c.remove(),4500);
+}
+
+function restartQuiz(){
+  bookmarks.clear();
+  document.getElementById('resultScreen').classList.add('hidden');
+  document.getElementById('reviewScreen').classList.add('hidden');
+  document.getElementById('welcomeScreen').classList.remove('hidden');
+}
+
+function reviewIncorrect(){
+  const list=document.getElementById('reviewList'); list.innerHTML='';
+  let any=false;
+  order.forEach((origIdx, i)=>{
+    const rec=answers[i];
+    if(rec && !rec.correct){
+      any=true;
+      const q=QUESTIONS[origIdx];
+      const div=document.createElement('div'); div.className='rev-item';
+      const yourAns = rec.chosen!==null ? q.opts[rec.optOrder[rec.chosen]] : '(skipped)';
+      div.innerHTML = `<span class="tag">✗ Incorrect</span><div style="font-weight:600;margin:6px 0">${q.q}</div>
+        <div>Your answer: <b>${yourAns}</b></div>
+        <div>Correct answer: <b style="color:var(--ok)">${q.opts[q.a]}</b></div>
+        <div style="margin-top:6px;color:var(--muted)">${q.exp}</div>`;
+      list.appendChild(div);
+    }
+  });
+  if(!any) list.innerHTML = '<p style="text-align:center;color:var(--muted)">Perfect score — nothing to review! 🎉</p>';
+  document.getElementById('resultScreen').classList.add('hidden');
+  document.getElementById('reviewScreen').classList.remove('hidden');
+}
+function backToResult(){
+  document.getElementById('reviewScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.remove('hidden');
+}
+
+function shareResult(){
+  const acc=document.getElementById('rAcc').textContent;
+  const text = `I scored ${document.getElementById('rCorrect').textContent}/${QUESTIONS.length} (${acc}) on the Rivers of Punjab Quiz by House of Aspirants! Try it: https://t.me/HouseofAspirants`;
+  if(navigator.share){ navigator.share({title:'Rivers of Punjab Quiz', text}); }
+  else { navigator.clipboard.writeText(text); alert('Result copied to clipboard!'); }
+}
+</script>
+</body>
+</html>
